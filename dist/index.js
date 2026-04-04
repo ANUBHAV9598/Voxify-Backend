@@ -13,6 +13,7 @@ const FRONTEND_ORIGINS = Array.from(new Set([
     process.env.FRONTEND_URL,
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://voxify-backend.vercel.app",
 ].filter((value) => Boolean(value?.trim()))));
 const liveKitHttpUrl = process.env.LIVEKIT_URL?.replace(/^wss:/, "https:").replace(/^ws:/, "http:");
 const app = express();

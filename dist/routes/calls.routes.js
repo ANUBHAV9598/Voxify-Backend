@@ -73,8 +73,11 @@ router.post("/token", async (req, res) => {
         catch (error) {
             console.warn("Listing LiveKit participants failed:", error);
         }
+        // Generate a unique identity suffix so testing with the same account across
+        // multiple windows doesn't disconnect the earlier connection.
+        const uniqueIdentity = `${payload.sub}-${crypto.randomUUID()}`;
         const token = new AccessToken(liveKitConfig.apiKey, liveKitConfig.apiSecret, {
-            identity: String(payload.sub),
+            identity: uniqueIdentity,
             name: typeof payload.name === "string" ? payload.name : String(payload.sub),
             metadata: JSON.stringify({
                 email: typeof payload.email === "string" ? payload.email : "",

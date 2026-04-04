@@ -12,6 +12,12 @@ const messageSendSchema = z.object({
 const typingSchema = z.object({
     conversationId: z.string().uuid("conversationId must be a valid UUID"),
 });
+const callInviteSchema = z.object({
+    roomId: z.string().min(1, "roomId is required"),
+    recipientIds: z.array(z.string().uuid("recipientId must be a valid UUID")).min(1, "At least one recipient is required"),
+    callerId: z.string().uuid("callerId must be a valid UUID"),
+    callerName: z.string().min(1, "callerName is required"),
+});
 const userConnectionCounts = new Map();
 const getCookieValue = (cookieHeader, key) => {
     if (!cookieHeader) {
@@ -276,6 +282,29 @@ export const registerSocketHandlers = (io) => {
             }
             catch (error) {
                 console.error("Failed to emit typing stop:", error);
+            }
+        });
+        socket.on("call:invite", (payload) => {
+            const parsed = callInviteSchema.safeParse(payload);
+            if (!parsed.success) {
+                socket.emit("call:error", {
+                    message: "Invalid call invite payload",
+                    errors: parsed.error.flatten(),
+                });
+                return;
+            }
+            try {
+                const { roomId, recipientIds, callerId, callerName } = parsed.data;
+                recipientIds.forEach((recipientId) => {
+                    io.to(`user:${recipientId}`).emit("call:incoming", {
+                        roomId,
+                        callerId,
+                        callerName,
+                    });
+                });
+            }
+            catch (error) {
+                console.error("Failed to proxy call invite:", error);
             }
         });
         socket.on("presence:sync", async (payload) => {
