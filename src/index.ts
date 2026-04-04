@@ -27,6 +27,7 @@ const liveKitHttpUrl = process.env.LIVEKIT_URL?.replace(/^wss:/, "https:").repla
 );
 
 const app = express();
+app.set("trust proxy", 1);
 app.disable("x-powered-by");
 app.use(
     helmet({
