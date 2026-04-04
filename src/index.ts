@@ -16,6 +16,7 @@ const FRONTEND_ORIGINS = Array.from(
             process.env.FRONTEND_URL,
             "http://localhost:3000",
             "http://127.0.0.1:3000",
+            "https://voxify-backend.vercel.app",
         ].filter((value): value is string => Boolean(value?.trim())),
     ),
 );
