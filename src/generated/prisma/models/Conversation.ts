@@ -306,10 +306,6 @@ export type EnumConversationTypeFieldUpdateOperationsInput = {
   set?: $Enums.ConversationType
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type ConversationCreateNestedOneWithoutMembersInput = {
   create?: Prisma.XOR<Prisma.ConversationCreateWithoutMembersInput, Prisma.ConversationUncheckedCreateWithoutMembersInput>
   connectOrCreate?: Prisma.ConversationCreateOrConnectWithoutMembersInput

@@ -32,6 +32,7 @@ export type UserMinAggregateOutputType = {
   isOnline: boolean | null
   lastSeen: Date | null
   createdAt: Date | null
+  sessionId: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type UserMaxAggregateOutputType = {
   isOnline: boolean | null
   lastSeen: Date | null
   createdAt: Date | null
+  sessionId: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type UserCountAggregateOutputType = {
   isOnline: number
   lastSeen: number
   createdAt: number
+  sessionId: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type UserMinAggregateInputType = {
   isOnline?: true
   lastSeen?: true
   createdAt?: true
+  sessionId?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type UserMaxAggregateInputType = {
   isOnline?: true
   lastSeen?: true
   createdAt?: true
+  sessionId?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type UserCountAggregateInputType = {
   isOnline?: true
   lastSeen?: true
   createdAt?: true
+  sessionId?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type UserGroupByOutputType = {
   isOnline: boolean
   lastSeen: Date
   createdAt: Date
+  sessionId: string | null
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -198,6 +205,7 @@ export type UserWhereInput = {
   isOnline?: Prisma.BoolFilter<"User"> | boolean
   lastSeen?: Prisma.DateTimeFilter<"User"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  sessionId?: Prisma.StringNullableFilter<"User"> | string | null
   memberships?: Prisma.ConversationMemberListRelationFilter
   messages?: Prisma.MessageListRelationFilter
 }
@@ -210,6 +218,7 @@ export type UserOrderByWithRelationInput = {
   isOnline?: Prisma.SortOrder
   lastSeen?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   memberships?: Prisma.ConversationMemberOrderByRelationAggregateInput
   messages?: Prisma.MessageOrderByRelationAggregateInput
 }
@@ -225,6 +234,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isOnline?: Prisma.BoolFilter<"User"> | boolean
   lastSeen?: Prisma.DateTimeFilter<"User"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  sessionId?: Prisma.StringNullableFilter<"User"> | string | null
   memberships?: Prisma.ConversationMemberListRelationFilter
   messages?: Prisma.MessageListRelationFilter
 }, "id" | "email">
@@ -237,6 +247,7 @@ export type UserOrderByWithAggregationInput = {
   isOnline?: Prisma.SortOrder
   lastSeen?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -253,6 +264,7 @@ export type UserScalarWhereWithAggregatesInput = {
   isOnline?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   lastSeen?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  sessionId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
@@ -263,6 +275,7 @@ export type UserCreateInput = {
   isOnline?: boolean
   lastSeen?: Date | string
   createdAt?: Date | string
+  sessionId?: string | null
   memberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
@@ -275,6 +288,7 @@ export type UserUncheckedCreateInput = {
   isOnline?: boolean
   lastSeen?: Date | string
   createdAt?: Date | string
+  sessionId?: string | null
   memberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
@@ -287,6 +301,7 @@ export type UserUpdateInput = {
   isOnline?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   memberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
@@ -299,6 +314,7 @@ export type UserUncheckedUpdateInput = {
   isOnline?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   memberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
@@ -311,6 +327,7 @@ export type UserCreateManyInput = {
   isOnline?: boolean
   lastSeen?: Date | string
   createdAt?: Date | string
+  sessionId?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -321,6 +338,7 @@ export type UserUpdateManyMutationInput = {
   isOnline?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -331,6 +349,7 @@ export type UserUncheckedUpdateManyInput = {
   isOnline?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -341,6 +360,7 @@ export type UserCountOrderByAggregateInput = {
   isOnline?: Prisma.SortOrder
   lastSeen?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -351,6 +371,7 @@ export type UserMaxOrderByAggregateInput = {
   isOnline?: Prisma.SortOrder
   lastSeen?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -361,6 +382,7 @@ export type UserMinOrderByAggregateInput = {
   isOnline?: Prisma.SortOrder
   lastSeen?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  sessionId?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -378,6 +400,10 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type UserCreateNestedOneWithoutMembershipsInput = {
@@ -416,6 +442,7 @@ export type UserCreateWithoutMembershipsInput = {
   isOnline?: boolean
   lastSeen?: Date | string
   createdAt?: Date | string
+  sessionId?: string | null
   messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
 }
 
@@ -427,6 +454,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   isOnline?: boolean
   lastSeen?: Date | string
   createdAt?: Date | string
+  sessionId?: string | null
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
 }
 
@@ -454,6 +482,7 @@ export type UserUpdateWithoutMembershipsInput = {
   isOnline?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
 }
 
@@ -465,6 +494,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   isOnline?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
 
@@ -476,6 +506,7 @@ export type UserCreateWithoutMessagesInput = {
   isOnline?: boolean
   lastSeen?: Date | string
   createdAt?: Date | string
+  sessionId?: string | null
   memberships?: Prisma.ConversationMemberCreateNestedManyWithoutUserInput
 }
 
@@ -487,6 +518,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   isOnline?: boolean
   lastSeen?: Date | string
   createdAt?: Date | string
+  sessionId?: string | null
   memberships?: Prisma.ConversationMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -514,6 +546,7 @@ export type UserUpdateWithoutMessagesInput = {
   isOnline?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   memberships?: Prisma.ConversationMemberUpdateManyWithoutUserNestedInput
 }
 
@@ -525,6 +558,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   isOnline?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   memberships?: Prisma.ConversationMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -576,6 +610,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isOnline?: boolean
   lastSeen?: boolean
   createdAt?: boolean
+  sessionId?: boolean
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -589,6 +624,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isOnline?: boolean
   lastSeen?: boolean
   createdAt?: boolean
+  sessionId?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -599,6 +635,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isOnline?: boolean
   lastSeen?: boolean
   createdAt?: boolean
+  sessionId?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -609,9 +646,10 @@ export type UserSelectScalar = {
   isOnline?: boolean
   lastSeen?: boolean
   createdAt?: boolean
+  sessionId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "isOnline" | "lastSeen" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "isOnline" | "lastSeen" | "createdAt" | "sessionId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
@@ -634,6 +672,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isOnline: boolean
     lastSeen: Date
     createdAt: Date
+    sessionId: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1066,6 +1105,7 @@ export interface UserFieldRefs {
   readonly isOnline: Prisma.FieldRef<"User", 'Boolean'>
   readonly lastSeen: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly sessionId: Prisma.FieldRef<"User", 'String'>
 }
     
 

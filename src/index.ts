@@ -103,6 +103,16 @@ app.use(
 );
 app.use(express.json());
 
+import rateLimit from "express-rate-limit";
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 200,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: "Too many requests from this IP, please try again after 15 minutes",
+});
+app.use(limiter);
+
 app.use("/auth", authRoutes);
 app.use("/calls", callRoutes);
 app.use("/conversations", conversationRoutes);
@@ -117,6 +127,8 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     },
 });
+
+app.set("io", io);
 
 registerSocketHandlers(io);
 

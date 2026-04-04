@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { CookieOptions } from "express";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import crypto from "crypto";
 import prisma from "../lib/prisma.js";
 import { signJwt } from "../lib/jwt.js";
 import {
@@ -69,11 +70,13 @@ router.post("/signup", async (req, res) => {
             name,
             email,
             passwordHash,
+            sessionId: crypto.randomUUID(),
         },
         select: {
             id: true,
             name: true,
             email: true,
+            sessionId: true,
             isOnline: true,
             lastSeen: true,
             createdAt: true,
@@ -81,7 +84,7 @@ router.post("/signup", async (req, res) => {
         });
 
         const token = signJwt(
-        { sub: user.id, email: user.email, name: user.name },
+        { sub: user.id, email: user.email, name: user.name, sessionId: user.sessionId },
         { expiresIn: "7d" },
         );
 
@@ -124,8 +127,20 @@ router.post("/signup", async (req, res) => {
             return res.status(401).json({ message: "Invalid email or password" });
         }
 
+        const sessionId = crypto.randomUUID();
+
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { sessionId },
+        });
+
+        const io = req.app.get("io");
+        if (io) {
+            io.in(`user:${user.id}`).disconnectSockets(true);
+        }
+
         const token = signJwt(
-            { sub: user.id, email: user.email, name: user.name },
+            { sub: user.id, email: user.email, name: user.name, sessionId },
             { expiresIn: "7d" },
         );
 

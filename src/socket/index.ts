@@ -223,7 +223,7 @@ const handlePresenceSync = async (
 };
 
 export const registerSocketHandlers = (io: Server) => {
-  io.use((socket, next) => {
+  io.use(async (socket, next) => {
     const token = getSocketToken(socket);
 
     if (!token) {
@@ -236,6 +236,16 @@ export const registerSocketHandlers = (io: Server) => {
     if (!decoded || typeof decoded === "string" || !decoded.sub) {
       next(new Error("Invalid or expired token"));
       return;
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id: String(decoded.sub) },
+        select: { sessionId: true }
+    });
+
+    if (user?.sessionId !== decoded.sessionId) {
+        next(new Error("Session expired. You logged in on another device."));
+        return;
     }
 
     socket.data.userId = String(decoded.sub);
