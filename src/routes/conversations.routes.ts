@@ -251,7 +251,20 @@ router.post("/group", async (req: AuthenticatedRequest, res) => {
         include: conversationInclude,
         });
 
-        return res.status(200).json({ conversations });
+        const conversationsWithUnreadCount = await Promise.all(
+            conversations.map(async (conv) => {
+                const currentUserMember = conv.members.find((m) => m.userId === userId);
+                const unreadCount = await prisma.message.count({
+                    where: {
+                        conversationId: conv.id,
+                        createdAt: { gt: currentUserMember?.lastReadAt ?? new Date(0) },
+                    },
+                });
+                return { ...conv, unreadCount };
+            }),
+        );
+
+        return res.status(200).json({ conversations: conversationsWithUnreadCount });
     } catch (error) {
         console.error("Fetching conversations failed:", error);
         return res.status(500).json({ message: "Internal server error" });
@@ -285,20 +298,29 @@ router.get("/:id/messages", async (req: AuthenticatedRequest, res) => {
         }
 
         const messages = await prisma.message.findMany({
-        where: { conversationId },
-        orderBy: { createdAt: "asc" },
-        include: {
-            sender: {
-            select: {
-                id: true,
-                name: true,
-                email: true,
+            where: { conversationId },
+            orderBy: { createdAt: "asc" },
+            include: {
+                sender: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                },
             },
-            },
-        },
         });
 
-        return res.status(200).json({ messages });
+        const members = await prisma.conversationMember.findMany({
+            where: { conversationId },
+            select: {
+                userId: true,
+                lastReadAt: true,
+                lastDeliveredAt: true,
+            },
+        });
+
+        return res.status(200).json({ messages, members });
     } catch (error) {
         console.error("Fetching messages failed:", error);
         return res.status(500).json({ message: "Internal server error" });

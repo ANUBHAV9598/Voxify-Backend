@@ -264,8 +264,27 @@ export const registerSocketHandlers = (io: Server) => {
 
     try {
       await markUserOnline(io, userId);
+      // Mark all incoming messages as delivered when connecting
+      await prisma.conversationMember.updateMany({
+        where: { userId },
+        data: { lastDeliveredAt: new Date() }
+      });
+      
+      // Notify all conversations this user is part of that they've 'delivered' pending messages
+      const memberships = await prisma.conversationMember.findMany({
+        where: { userId },
+        select: { conversationId: true }
+      });
+      
+      memberships.forEach(m => {
+        io.to(`conversation:${m.conversationId}`).emit("conversation:delivered_update", {
+          conversationId: m.conversationId,
+          userId,
+          lastDeliveredAt: new Date().toISOString()
+        });
+      });
     } catch (error) {
-      console.error("Failed to mark user online:", error);
+      console.error("Failed to mark user online or update delivery:", error);
     }
 
     socket.on("conversation:join", async (payload) => {
@@ -339,12 +358,65 @@ export const registerSocketHandlers = (io: Server) => {
           },
         });
 
+        const conversation = await prisma.conversation.findUnique({
+          where: { id: conversationId },
+          include: { members: true },
+        });
+
+        // 1. Emit to active conversation room
         io.to(`conversation:${conversationId}`).emit("message:new", message);
+
+        // 2. Emit to offline/background recipients
+        if (conversation) {
+          conversation.members.forEach((member) => {
+            if (member.userId !== userId) {
+              // Emit global notification for the chat left panel and toasts
+              io.to(`user:${member.userId}`).emit("notification:new_message", {
+                message,
+                conversationId,
+              });
+            }
+          });
+        }
       } catch (error) {
         console.error("Failed to send realtime message:", error);
         socket.emit("message:error", {
           message: "Failed to send message",
         });
+      }
+    });
+
+    socket.on("conversation:read", async (payload: { conversationId: string }) => {
+      try {
+        const { conversationId } = payload;
+        await prisma.conversationMember.update({
+          where: { conversationId_userId: { conversationId, userId } },
+          data: { lastReadAt: new Date() },
+        });
+        socket.to(`conversation:${conversationId}`).emit("conversation:read_update", {
+          conversationId,
+          userId,
+          lastReadAt: new Date(),
+        });
+      } catch (error) {
+        console.error("Failed to update read status:", error);
+      }
+    });
+
+    socket.on("message:delivered", async (payload: { conversationId: string }) => {
+      try {
+        const { conversationId } = payload;
+        await prisma.conversationMember.update({
+          where: { conversationId_userId: { conversationId, userId } },
+          data: { lastDeliveredAt: new Date() },
+        });
+        socket.to(`conversation:${conversationId}`).emit("conversation:delivered_update", {
+          conversationId,
+          userId,
+          lastDeliveredAt: new Date(),
+        });
+      } catch (error) {
+        console.error("Failed to update delivered status:", error);
       }
     });
 
